@@ -10,9 +10,12 @@ velocity = 200  # velocity along Y-axis
 
 main_group_name = "FLOCK_group"
 
-# Create the main group if it doesn't exist
-if not cmds.objExists(main_group_name):
-    cmds.group(empty=True, name=main_group_name)
+# If the main group exists, delete it
+if cmds.objExists(main_group_name):
+    cmds.delete(main_group_name)
+
+# Create the main group
+cmds.group(empty=True, name=main_group_name)
 
 # Create boids
 for i in range(0, boid_count):
@@ -34,7 +37,9 @@ for i in range(0, boid_count):
 
     # Parent the CTRL_ group to the main group
     cmds.parent(ctrl_group_name, main_group_name)
-
+    
     # Create an expression to animate the boid
-    expression = f"{boid_name}.translateY = {velocity} * time;"
+    expression = f"""
+        {boid_name}.translateY = {velocity} * time;
+    """
     cmds.expression(s=expression)
