@@ -3,11 +3,7 @@ import random
 import itertools
 import math
 
-class Main:
-    def __init__ (self):
-        Boid_UI ()
-
-class Boid_UI:
+class UI:
     def __init__ (self):
         self.window = 'BoidWindow'
         self.title = 'Boidssss'
@@ -72,15 +68,15 @@ class Boid_UI:
         flock_vars = (master_group_name, count, domain_radius)
 
         # Call create_flock and create_domain
-        flock_instance = Flock(boid_vars, flock_vars)
-        flock_instance.create_domain()
-        flock_instance.create_flock()
+        self.flock_instance = Flock(boid_vars, flock_vars)
+        self.flock_instance.create_domain()
+        self.flock_instance.create_flock()
 
     def bake_simulation_btn_active(self, *args):
         # Retrive the values from the bake fields
         frame_range = cmds.intFieldGrp(self.frame_range_field, query=True, value=True)[0]
 
-        flock_instance.create_keyframes(frame_range)
+
 
 class Boids:
     def __init__ (self, boid_vars):
@@ -115,23 +111,13 @@ class Boids:
 
         return self
 
-# TODO: Boid behavior methods to implement
-# * Separation method will make the boids avoid each other
-    def separation (self):
-        pass
-# * Alignment method will make the boids move in the same direction as the flock
-    def alignment (self):
-        pass
-# * Cohesion method will make the boids move towards the center of mass of the flock
-    def cohesion (self):
-        pass
-# * Collisions method will make the boids avoid obstacles
-    def collisions (self):
-        pass
-# * Constraints method will give the artist more control over the behavior of the flock
-# * For example, the artist could make the flock avoid a certain area or move towards a certain area etc...
-    def constraints (self):
-        pass
+    def update_boid (self, id):
+        self.X += self.dX
+        self.Y += self.dY
+        self.Z += self.dZ
+        cmds.xform(self.ctrl_group_name, t=[self.X, self.Y, self.Z], ws=True)
+
+
 
 class Flock:
     def __init__ (self, boid_vars, flock_vars):
@@ -166,9 +152,10 @@ class Flock:
             boid = boid_instance.create_boid(i)
             self.flock_array.append(boid)
 
-    def create_keyframes (self, frame_range):
-        for f in range(frame_range[0], frame_range[1]):
-            for boid in self.flock_array:
-                boids.set_keyframes(f)
-# Run the main class to start the program
-Main ()
+    def update_flock (self):
+        for boid in self.flock_array:
+            boid.update_boid(0)
+
+
+# Run the UI class to start the program
+UI ()
