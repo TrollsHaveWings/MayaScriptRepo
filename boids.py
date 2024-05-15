@@ -22,7 +22,7 @@ for i in range(0, boid_count):
     xSpawn = random.uniform(-1 * boid_spawn_radius, boid_spawn_radius)
     ySpawn = random.uniform(-1 * boid_spawn_radius, boid_spawn_radius)
     zSpawn = random.uniform(-1 * boid_spawn_radius, boid_spawn_radius)
-    
+
     boid_name = master_boid_name + str(i)  # Create a unique name for each boid
 
     # Use cone GEO to represent boid
@@ -37,7 +37,7 @@ for i in range(0, boid_count):
 
     # Parent the CTRL_ group to the main group
     cmds.parent(ctrl_group_name, main_group_name)
-    
+
     # Create an expression to animate the boid
     expression = f"""
         {boid_name}.translateY = {velocity} * time;

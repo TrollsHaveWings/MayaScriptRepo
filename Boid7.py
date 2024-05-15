@@ -42,6 +42,32 @@ class UI:
 
         Flock(packed_flock_values, packed_boid_values)
 
+        create_main_ui()
+
+    def create_main_ui(self):
+        window = 'main_window'
+        title = 'flock/boids Controls'
+        size = (500, 300)
+
+        # If an old version of the window exists, delete it.
+        if cmds.window(window, exists=True):
+            cmds.deleteUI(window, window=True)
+
+        # Create the window and the main layout.
+        window = cmds.window(window, title=title, widthHeight=size)
+        main_layout = cmds.columnLayout(adjustableColumn=True)
+
+        # Bake simulation button
+        cmds.button(label='Bake Simulation', command=self.bake_simulation_btn_active)
+
+        # Show the window
+        cmds.showWindow()
+
+    def bake_simulation_btn_active(self, *args):
+        # This method is called when the 'Bake Simulation' button is pressed.
+        print("Bake Simulation button pressed.") # TEMP
+
+
 
 class Boid:
     def __init__ (self, boid_id, packed_boid_values):
@@ -69,7 +95,7 @@ class Boid:
 class Flock:
     def __init__ (self, packed_flock_values, packed_boid_values):
         # This function creates the flock of boids.
-        master_group_name, count, domain_radius = packed_flock_values
+        master_group_name, self.count, domain_radius = packed_flock_values
 
         # Check if the master group exists and delete it if it does then create a new one.
         if cmds.objExists(master_group_name):
@@ -77,7 +103,7 @@ class Flock:
         cmds.group(empty=True, name=master_group_name)
 
         # Create the boids and parent them to the master group.
-        for i in range(count):
+        for i in range(self.count):
             boid_id = i + 1
             Boid(boid_id, packed_boid_values)
 
